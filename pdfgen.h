@@ -269,6 +269,27 @@ int pdf_page_set_size(struct pdf_doc *pdf, struct pdf_object *page,
                       float width, float height);
 
 /**
+ * pdf_write_pfn is a function pointer for pdf_save_pfn
+ */
+typedef void (*pdf_write_pfn)(void *user_data, const void *buffer,
+                              size_t size);
+
+/**
+ * pdf_tell_pfn is a function pointer for pdf_save_pfn
+ */
+typedef long (*pdf_tell_pfn)(void *user_data);
+
+/**
+ * Save the given pdf document using function callbacks
+ * @param pdf PDF document to save
+ * @param write Function pointer called to write data
+ * @param tell Function pointer called to get the offset
+ * @param user_data User data pass to the write function pointer
+ * @return < 0 on failure, >= 0 on success
+ */
+int pdf_save_pfn(struct pdf_doc *pdf, pdf_write_pfn write, pdf_tell_pfn tell, void *user_data);
+
+/**
  * Save the given pdf document to the supplied filename.
  * @param pdf PDF document to save
  * @param filename Name of the file to store the PDF into (NULL for stdout)
