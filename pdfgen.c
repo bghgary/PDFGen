@@ -626,16 +626,16 @@ struct pdf_doc *pdf_create(float width, float height,
         strftime(obj->info->date, sizeof(obj->info->date), "%Y%m%d%H%M%SZ",
                  &tm);
     }
-    if (!obj->info->creator[0])
-        snprintf(obj->info->creator, sizeof(obj->info->creator), "pdfgen");
-    if (!obj->info->producer[0])
-        snprintf(obj->info->producer, sizeof(obj->info->producer), "pdfgen");
-    if (!obj->info->title[0])
-        snprintf(obj->info->title, sizeof(obj->info->title), "pdfgen");
-    if (!obj->info->author[0])
-        snprintf(obj->info->author, sizeof(obj->info->author), "pdfgen");
-    if (!obj->info->subject[0])
-        snprintf(obj->info->subject, sizeof(obj->info->subject), "pdfgen");
+    //if (!obj->info->creator[0])
+    //    snprintf(obj->info->creator, sizeof(obj->info->creator), "pdfgen");
+    //if (!obj->info->producer[0])
+    //    snprintf(obj->info->producer, sizeof(obj->info->producer), "pdfgen");
+    //if (!obj->info->title[0])
+    //    snprintf(obj->info->title, sizeof(obj->info->title), "pdfgen");
+    //if (!obj->info->author[0])
+    //    snprintf(obj->info->author, sizeof(obj->info->author), "pdfgen");
+    //if (!obj->info->subject[0])
+    //    snprintf(obj->info->subject, sizeof(obj->info->subject), "pdfgen");
 
     if (!pdf_add_object(pdf, OBJ_pages)) {
         pdf_destroy(pdf);
@@ -778,17 +778,26 @@ static int pdf_save_object(struct pdf_doc *pdf, pdf_write_pfn write,
     case OBJ_info: {
         struct pdf_info *info = object->info;
 
-        pfn_printf(write, user_data, str,
-                "<<\r\n"
-                "  /Creator (%s)\r\n"
-                "  /Producer (%s)\r\n"
-                "  /Title (%s)\r\n"
-                "  /Author (%s)\r\n"
-                "  /Subject (%s)\r\n"
-                "  /CreationDate (D:%s)\r\n"
-                ">>\r\n",
-                info->creator, info->producer, info->title, info->author,
-                info->subject, info->date);
+        pfn_printf(write, user_data, str, "<<\r\n");
+        if (info->creator[0])
+            pfn_printf(write, user_data, str, "  /Creator (%s)\r\n",
+                       info->creator);
+        if (info->producer[0])
+            pfn_printf(write, user_data, str, "  /Producer (%s)\r\n",
+                       info->producer);
+        if (info->title[0])
+            pfn_printf(write, user_data, str, "  /Title (%s)\r\n",
+                       info->title);
+        if (info->author[0])
+            pfn_printf(write, user_data, str, "  /Author (%s)\r\n",
+                       info->author);
+        if (info->subject[0])
+            pfn_printf(write, user_data, str, "  /Subject (%s)\r\n",
+                       info->subject);
+        if (info->date[0])
+            pfn_printf(write, user_data, str, "  /CreationDate (D:%s)\r\n",
+                       info->date);
+        pfn_printf(write, user_data, str, ">>\r\n");
         break;
     }
 
